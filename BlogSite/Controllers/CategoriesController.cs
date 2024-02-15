@@ -1,13 +1,16 @@
 ﻿using BlogSite.Context;
 using BlogSite.Models;
 using BlogSite.Models.PageModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace BlogSite.Controllers
 {
+    [Authorize(Roles = "Manager")]
     [Route("api/[controller]")]
     [ApiController]
+
     public class CategoriesController : ControllerBase
     {
         private readonly NewsContext _context;
@@ -17,7 +20,8 @@ namespace BlogSite.Controllers
             _context = context;
         }
 
-        [HttpGet]
+        [HttpGet("getcategories")]
+        [Authorize(Roles = "Manager")]
         public IActionResult Get()
         {
             var categories = _context.Categories;
@@ -25,6 +29,7 @@ namespace BlogSite.Controllers
         }
 
         [HttpPost("createcategory")]
+        [Authorize(Roles = "Manager")]
         public async Task<IActionResult> CreateCategory([FromBody] CreateCategoryModel model)
         {
             var category = new Category
@@ -35,6 +40,7 @@ namespace BlogSite.Controllers
             _context.SaveChanges();
             return Ok(category);
         }
+
 
         [HttpGet("{id}")]
         public async Task<ActionResult<Category>> GetCategory(int id)

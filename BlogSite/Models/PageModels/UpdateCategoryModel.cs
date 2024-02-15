@@ -1,9 +1,8 @@
 ﻿namespace BlogSite.Models.PageModels
 {
-    public class UpdateCategoryModel
+    public class UpdateCategoryModel : CreateCategoryModel
     {
         public int Id { get; set; }
-        public string Name { get; set; }
 
     }
 }

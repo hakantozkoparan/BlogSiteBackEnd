@@ -1,6 +1,7 @@
 ﻿using BlogSite.Context;
 using BlogSite.Models;
 using BlogSite.Models.PageModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
@@ -9,6 +10,7 @@ namespace BlogSite.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+
     public class BlogsController : ControllerBase
     {
         private readonly NewsContext _context;

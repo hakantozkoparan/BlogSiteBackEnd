@@ -1,10 +1,7 @@
 ﻿namespace BlogSite.Models.PageModels
 {
-    public class UpdateNewsModel
+    public class UpdateNewsModel : CreateNewsModel
     {
-        public string? Title { get; set; }
-        public string? Description { get; set; }
-        public bool isPublish { get; set; }
-        public int CategoryId { get; set; }
+        public int Id { get; set; }
     }
 }

@@ -10,11 +10,13 @@ using BlogSite.Models;
 using Microsoft.AspNetCore.Identity;
 using BlogSite.Security;
 using BlogSite.Models.PageModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BlogSite.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+
     public class UsersController : ControllerBase
     {
         private readonly NewsContext _context;
@@ -29,15 +31,6 @@ namespace BlogSite.Controllers
             _signInManager = signInManager;
             _configuration = configuration;
         }
-
-        [HttpGet("gettoken")]
-        public IActionResult GetToken()
-        {
-            Token token = TokenHandler.CreateToken(_configuration);
-            return Ok(token);
-        }
-
-
 
         // Tüm kullanıcıların id, name ve surname ile listeleme
         [HttpGet("getallusers")]
@@ -94,15 +87,21 @@ namespace BlogSite.Controllers
         public async Task<IActionResult> Login([FromBody] LogInModel logInModel)
         {
             var user = await _userManager.FindByEmailAsync(logInModel.Email);
-            if(user == null)
+            if (user == null)
             {
                 return Unauthorized();
             }
             var result = await _signInManager.PasswordSignInAsync(user, logInModel.Password, logInModel.RememberMe, true);
-            //var resultt = await _signInManager.PasswordSignInAsync(password:logInModel.Password, isPersistent: logInModel.RememberMe);
             if (result.Succeeded)
             {
-                return Ok("Başarılı");
+                // Kullanıcının rollerini al
+                var roles = await _userManager.GetRolesAsync(user);
+
+                // Token oluştur
+                var token = TokenHandler.CreateToken(_configuration, user, roles);
+
+                // Token'ı dön
+                return Ok(token);
             }
             return Unauthorized();
         }
