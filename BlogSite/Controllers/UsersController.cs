@@ -91,7 +91,8 @@ namespace BlogSite.Controllers
             {
                 return Unauthorized();
             }
-            var result = await _signInManager.PasswordSignInAsync(user, logInModel.Password, logInModel.RememberMe, true);
+            //var result = await _signInManager.PasswordSignInAsync(user, logInModel.Password, logInModel.RememberMe, true);
+            var result = await _signInManager.CheckPasswordSignInAsync(user, logInModel.Password, true);
             if (result.Succeeded)
             {
                 // Kullanıcının rollerini al

@@ -30,6 +30,7 @@ namespace BlogSite.Security
                 claims.Add(new Claim(ClaimTypes.Role, role));
             }
 
+            var creds = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
             JwtSecurityToken jwtSecurityToken = new(
                 issuer: configuration["Token:Issuer"],
@@ -37,7 +38,7 @@ namespace BlogSite.Security
                 claims: claims, // Claims ekleniyor
                 expires: token.Expiration,
                 notBefore: DateTime.Now,
-                signingCredentials: credentials
+                signingCredentials: creds
             );
 
             JwtSecurityTokenHandler tokenHandler = new();

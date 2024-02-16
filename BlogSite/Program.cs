@@ -16,6 +16,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddDbContext<NewsContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+//Swagger authorize kodu
 builder.Services.AddSwaggerGen(setup =>
 {
     // Include 'SecurityScheme' to use JWT Authentication
@@ -43,7 +44,14 @@ builder.Services.AddSwaggerGen(setup =>
     });
 
 });
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+
+// çalışan yer
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
     .AddJwtBearer(options =>
     {
         options.TokenValidationParameters = new TokenValidationParameters
@@ -76,14 +84,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 //            ClockSkew = TimeSpan.Zero // tokenin süresi dolduğunda hemen hata vermesi için sunucularda saat farkı olabilir bu farkı sıfıra indirir
 //        };
 //    });
-builder.Services.AddControllers(options =>
-{
-    var policy = new AuthorizationPolicyBuilder()
-        .RequireAuthenticatedUser()
-        .Build();
-    options.Filters.Add(new AuthorizeFilter(policy));
-});
-// asddsasd
 
 builder.Services.AddIdentity<User, IdentityRole<Guid>>()
     .AddEntityFrameworkStores<NewsContext>();
@@ -130,4 +130,3 @@ using (var scope = app.Services.CreateScope())
     }
 }
 app.Run();
-

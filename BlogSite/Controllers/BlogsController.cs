@@ -10,7 +10,7 @@ namespace BlogSite.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-
+    [Authorize(Roles ="Admin")]
     public class BlogsController : ControllerBase
     {
         private readonly NewsContext _context;
